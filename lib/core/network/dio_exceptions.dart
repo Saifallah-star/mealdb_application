@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 
 class ApiException {
-  ApiError handleException(dynamic error) {
+  static ApiError handleException(dynamic error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
         return ApiError(message: 'Connection timeout');

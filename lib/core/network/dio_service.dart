@@ -5,15 +5,15 @@ import 'package:mealdb_application/core/network/dio_exceptions.dart';
 
 class DioService {
   DioClient dioClient = DioClient();
-  ApiException apiException = ApiException();
+
   Future<dynamic> get(String endpoint) async {
     try {
       final response = await dioClient.dio.get(endpoint);
       return response.data;
     } on DioException catch (e) {
-      throw apiException.handleException(e);
+      throw ApiException.handleException(e);
     } catch (e) {
-      throw ApiError(message: 'Failed to load data: $e');
+      throw ApiError(message: '(DioService) Failed to load data: $e');
     }
   }
 
@@ -22,7 +22,7 @@ class DioService {
       final response = await dioClient.dio.post(endpoint, data: data);
       return response.data;
     } on DioException catch (e) {
-      throw apiException.handleException(e);
+      throw ApiException.handleException(e);
     } catch (e) {
       throw ApiError(message: 'Failed to load data: $e');
     }
@@ -33,7 +33,7 @@ class DioService {
       final response = await dioClient.dio.put(endpoint, data: data);
       return response.data;
     } on DioException catch (e) {
-      throw apiException.handleException(e);
+      throw ApiException.handleException(e);
     } catch (e) {
       throw ApiError(message: 'Failed to load data: $e');
     }
@@ -44,7 +44,7 @@ class DioService {
       final response = await dioClient.dio.delete(endpoint);
       return response.data;
     } on DioException catch (e) {
-      throw apiException.handleException(e);
+      throw ApiException.handleException(e);
     } catch (e) {
       throw ApiError(message: 'Failed to load data: $e');
     }

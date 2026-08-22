@@ -4,14 +4,14 @@ import 'package:mealdb_application/core/shared/custom_text.dart';
 
 class MealCard extends StatelessWidget {
   final String mealName;
-  final String mealImage;
-  final String country;
+  final String? mealImage;
+  final String? description;
 
   const MealCard({
     super.key,
     required this.mealName,
-    required this.mealImage,
-    required this.country,
+    this.mealImage,
+    this.description,
   });
 
   @override
@@ -23,9 +23,17 @@ class MealCard extends StatelessWidget {
       shadowColor: Colors.black54,
       child: Column(
         children: [
-          Image.network(mealImage, width: 130, height: 130),
+          mealImage != null
+              ? Image.network(mealImage!, width: 130, height: 130)
+              : Image.network(
+                  'https://tenor.com/view/no-internet-bad-internet-internet-gif-5717777564739969668.gif',
+                  width: 130,
+                  height: 130,
+                ),
           CustomText(text: mealName, fontSize: 16),
-          CustomText(text: country, fontSize: 14),
+          if (description != null) ...[
+            CustomText(text: description!, fontSize: 14),
+          ],
         ],
       ),
     );

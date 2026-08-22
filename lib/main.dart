@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mealdb_application/root.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
       ),
-      home: const Root(),
+      home: Root(),
     );
   }
 }

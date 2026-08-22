@@ -1,24 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/home/views/home_page.dart';
+import 'package:mealdb_application/core/features/home/components/listingBarComponents/listing_bar.dart';
+import 'package:mealdb_application/core/features/home/components/search_bar.dart';
+import 'package:mealdb_application/core/features/home/views/all_areas_page.dart';
+import 'package:mealdb_application/core/features/home/views/all_categories.dart';
+import 'package:mealdb_application/core/features/home/views/all_ingredients_page.dart';
+import 'package:mealdb_application/core/shared/custom_text.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key});
+  const Root({super.key, this.count = 0});
+  final int count;
 
   @override
   State<Root> createState() => _RootState();
 }
 
 class _RootState extends State<Root> {
-  final int _counter = 0;
+  int counter = 0;
 
-  // void _incrementCounter() {}
+  @override
+  void initState() {
+    super.initState();
+    counter = widget.count;
+  }
+
+  final TextEditingController searchController = TextEditingController();
+
+  void _onListingOptionSelected(int index) {
+    setState(() {
+      counter = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      body: IndexedStack(index: _counter, children: [HomePage()]),
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: AppColors.primaryColor,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          // expandedHeight: 190,
+          collapsedHeight: 190,
+          title: CustomText(
+            text: 'mealdb',
+            fontSize: 20,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+          flexibleSpace: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 130),
+              Search(searchController: searchController),
+              //ListingBar
+              ListingBar(
+                selectedIndex: counter,
+                onOptionSelected: _onListingOptionSelected,
+              ),
+            ],
+          ),
+        ),
+        SliverFillRemaining(
+          child: IndexedStack(
+            index: counter,
+            children: [AllIngredientsPage(), AllAreasPage(), AllCategories()],
+          ),
+        ),
+      ],
     );
   }
 }
