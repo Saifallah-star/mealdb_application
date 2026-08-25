@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/Filters/data/Models/area_model.dart';
+import 'package:mealdb_application/core/features/Filters/components/filter_wide_card.dart';
+import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
 import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
-import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 import 'package:mealdb_application/root.dart';
 
 class FilterByArea extends StatefulWidget {
-  final AllAreasModel area;
+  final String area;
 
   const FilterByArea({super.key, required this.area});
 
@@ -17,7 +17,7 @@ class FilterByArea extends StatefulWidget {
 
 class _FilterByAreaState extends State<FilterByArea> {
   Future<bool> timeout = Future.delayed(const Duration(seconds: 2), () => true);
-  List<AreaModel> Areas = [];
+  List<FilterModel> Areas = [];
 
   // --------------------------------------------------------------------------
   @override
@@ -33,7 +33,7 @@ class _FilterByAreaState extends State<FilterByArea> {
 
   Future<void> _fetchData() async {
     try {
-      final response = await FiltersRepo().FilterByArea(widget.area.name);
+      final response = await FiltersRepo().FilterByArea(widget.area);
       setState(() {
         Areas = response;
       });
@@ -58,7 +58,7 @@ class _FilterByAreaState extends State<FilterByArea> {
           },
         ),
         title: Text(
-          'Meals with ${widget.area.name}',
+          'Meals with ${widget.area}',
           style: const TextStyle(color: Colors.white),
         ),
       ),
@@ -96,97 +96,10 @@ class _FilterByAreaState extends State<FilterByArea> {
               itemCount: Areas.length,
               itemBuilder: (context, index) {
                 final area = Areas[index];
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 6.0),
-                  padding: const EdgeInsets.all(6.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4.0,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    title: Column(
-                      children: [
-                        Image.network(
-                          area.imageUrl,
-                          height: 200,
-                          width: 200,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.restaurant_menu,
-                              color: AppColors.SelectedColor,
-                              size: 50,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 8.0),
-                        // Name
-                        Row(
-                          children: [
-                            Text(
-                              'Name: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                area.name,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Area
-                        Row(
-                          children: [
-                            Text(
-                              'Area: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                area.Area,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Country
-                        Row(
-                          children: [
-                            Text(
-                              'Country: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                area.Country,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                return FilterWideCard(
+                  model: area,
+                  In: widget.area,
+                  filterType: 'area',
                 );
               },
             ),

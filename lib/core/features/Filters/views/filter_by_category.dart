@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/Filters/data/Models/category_model.dart';
+import 'package:mealdb_application/core/features/Filters/components/filter_wide_card.dart';
+import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
 import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 import 'package:mealdb_application/root.dart';
@@ -14,7 +15,7 @@ class FilterByCategory extends StatefulWidget {
 }
 
 class _FilterByCategoryState extends State<FilterByCategory> {
-  List<CategoryModel> categories = [];
+  List<FilterModel> categories = [];
   Future<bool> timeout = Future.delayed(const Duration(seconds: 2), () => true);
 
   @override
@@ -92,97 +93,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 6.0),
-                  padding: const EdgeInsets.all(6.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4.0,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    title: Column(
-                      children: [
-                        Image.network(
-                          category.imageUrl,
-                          height: 200,
-                          width: 200,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.restaurant_menu,
-                              color: AppColors.SelectedColor,
-                              size: 50,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 8.0),
-                        // Name
-                        Row(
-                          children: [
-                            Text(
-                              'Name: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                category.name,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Area
-                        Row(
-                          children: [
-                            Text(
-                              'Area: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                category.Area! ?? 'N/A',
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Country
-                        Row(
-                          children: [
-                            Text(
-                              'Country: ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                category.Country! ?? 'N/A',
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                return FilterWideCard(
+                  model: category,
+                  In: widget.name,
+                  filterType: 'category',
                 );
               },
             ),

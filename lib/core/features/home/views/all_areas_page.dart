@@ -80,7 +80,7 @@ class _AllAreasPageState extends State<AllAreasPage> {
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => FilterByArea(area: area),
+                    builder: (context) => FilterByArea(area: area.name),
                   ),
                 );
               },
