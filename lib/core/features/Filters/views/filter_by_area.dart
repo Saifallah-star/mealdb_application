@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mealdb_application/core/features/home/data/models/Area_model.dart';
+import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
 import 'package:mealdb_application/root.dart';
 
 class FilterByArea extends StatelessWidget {
-  final AreaModel area;
+  final AllAreasModel area;
 
   const FilterByArea({super.key, required this.area});
 

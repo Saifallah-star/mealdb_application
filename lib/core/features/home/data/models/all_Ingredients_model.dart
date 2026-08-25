@@ -1,9 +1,9 @@
-class IngredientModel {
+class AllIngredientsModel {
   final String idIngredient;
   final String name;
   final String? type;
   final String? ingredientImage;
-  IngredientModel({
+  AllIngredientsModel({
     required this.idIngredient,
     required this.name,
     this.ingredientImage,
@@ -15,7 +15,7 @@ class IngredientModel {
   //! strThumb (not ok)  (ingredientImage)
   //! strType  (already null from API)
 
-  factory IngredientModel.fromJson(Map<String, dynamic> json) {
+  factory AllIngredientsModel.fromJson(Map<String, dynamic> json) {
     if (json['strDescription'] == null) {
       json['strDescription'] = 'No description available';
       //json['strType'] = 'ingredient';
@@ -24,7 +24,7 @@ class IngredientModel {
       json['strThumb'] =
           'https://www.themealdb.com/images/ingredients/chicken.png';
     }
-    return IngredientModel(
+    return AllIngredientsModel(
       idIngredient: json['idIngredient'],
       name: json['strIngredient'],
       // ingredientImage: json['strThumb'],

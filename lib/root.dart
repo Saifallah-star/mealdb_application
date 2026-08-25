@@ -34,41 +34,44 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          backgroundColor: AppColors.primaryColor,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          // expandedHeight: 190,
-          collapsedHeight: 190,
-          title: CustomText(
-            text: 'mealdb',
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: AppColors.primaryColor,
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            // expandedHeight: 190,
+            collapsedHeight: 190,
+            title: CustomText(
+              text: 'mealdb',
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            flexibleSpace: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 130),
+                Search(searchController: searchController),
+                //ListingBar
+                ListingBar(
+                  selectedIndex: counter,
+                  onOptionSelected: _onListingOptionSelected,
+                ),
+              ],
+            ),
           ),
-          flexibleSpace: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 130),
-              Search(searchController: searchController),
-              //ListingBar
-              ListingBar(
-                selectedIndex: counter,
-                onOptionSelected: _onListingOptionSelected,
-              ),
-            ],
+          SliverFillRemaining(
+            child: IndexedStack(
+              index: counter,
+              children: [AllIngredientsPage(), AllAreasPage(), AllCategories()],
+            ),
           ),
-        ),
-        SliverFillRemaining(
-          child: IndexedStack(
-            index: counter,
-            children: [AllIngredientsPage(), AllAreasPage(), AllCategories()],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

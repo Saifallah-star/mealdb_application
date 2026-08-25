@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
 import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
-import 'package:mealdb_application/core/features/home/data/models/Area_model.dart';
+import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 import 'package:mealdb_application/core/network/dio_exceptions.dart';
 
@@ -14,7 +14,7 @@ class AllAreasPage extends StatefulWidget {
 }
 
 class _AllAreasPageState extends State<AllAreasPage> {
-  List<AreaModel> areas = [];
+  List<AllAreasModel> areas = [];
 
   Future<void> _fetchData() async {
     try {
@@ -38,7 +38,7 @@ class _AllAreasPageState extends State<AllAreasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: Colors.white,
       body: ListView.builder(
         itemCount: areas.length,
         itemBuilder: (context, index) {
@@ -51,7 +51,7 @@ class _AllAreasPageState extends State<AllAreasPage> {
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4.0,
                   offset: const Offset(0, 2),
                 ),
@@ -68,7 +68,12 @@ class _AllAreasPageState extends State<AllAreasPage> {
                   ),
                 );
               },
-              title: Text(area.name ?? 'Unnamed Area'),
+              title: Column(
+                children: [
+                  Text('Area: ${area.name}'),
+                  Text('Country: ${area.country}'),
+                ],
+              ),
             ),
           );
         },

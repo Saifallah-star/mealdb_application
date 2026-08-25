@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:mealdb_application/core/features/home/data/models/Area_model.dart';
-import 'package:mealdb_application/core/features/home/data/models/Ingredient_model.dart';
-import 'package:mealdb_application/core/features/home/data/models/category_model.dart';
+import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
+import 'package:mealdb_application/core/features/home/data/models/all_Ingredients_model.dart';
+import 'package:mealdb_application/core/features/home/data/models/all_categories_model.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 import 'package:mealdb_application/core/network/dio_exceptions.dart';
 import 'package:mealdb_application/core/network/dio_service.dart';
 
 class HomeRepo {
-  Future<List<IngredientModel>> getIngredients() async {
+  Future<List<AllIngredientsModel>> getIngredients() async {
     try {
       final response = await DioService().get('list.php?i=list');
       return (response['meals'] as List)
-          .map((e) => IngredientModel.fromJson(e))
+          .map((e) => AllIngredientsModel.fromJson(e))
           .toList();
     } on DioException catch (e) {
       throw ApiException.handleException(e);
@@ -21,11 +21,11 @@ class HomeRepo {
     }
   }
 
-  Future<List<CategoryModel>> getAllCategories() async {
+  Future<List<AllCategoriesModel>> getAllCategories() async {
     try {
       final response = await DioService().get('list.php?c=list');
       return (response['meals'] as List)
-          .map((e) => CategoryModel.fromJson(e))
+          .map((e) => AllCategoriesModel.fromJson(e))
           .toList();
     } on DioException catch (e) {
       throw ApiException.handleException(e);
@@ -34,11 +34,11 @@ class HomeRepo {
     }
   }
 
-  Future<List<AreaModel>> getAllAreas() async {
+  Future<List<AllAreasModel>> getAllAreas() async {
     try {
       final response = await DioService().get('list.php?a=list');
       return (response['meals'] as List)
-          .map((e) => AreaModel.fromJson(e))
+          .map((e) => AllAreasModel.fromJson(e))
           .toList();
     } on DioException catch (e) {
       throw ApiException.handleException(e);
