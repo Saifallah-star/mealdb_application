@@ -63,7 +63,7 @@ class _AllAreasPageState extends State<AllAreasPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              tileColor: Colors.grey.withOpacity(0.1),
+              tileColor: Colors.grey.withValues(alpha: 0.1),
               // tileColor: Colors.white,
               leading: CircleAvatar(
                 backgroundColor: Colors.white,

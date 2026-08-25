@@ -90,7 +90,7 @@ class _AllCategoriesState extends State<AllCategories> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  tileColor: Colors.grey.withOpacity(0.1),
+                  tileColor: Colors.grey.withValues(alpha: 0.1),
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(

@@ -15,8 +15,8 @@ class CategoryModel {
     return CategoryModel(
       name: json['strMeal'] ?? '',
       imageUrl: json['strMealThumb'] ?? '',
-      Area: json['strArea'] ?? '',
-      Country: json['strCountry'] ?? '',
+      Area: json['strArea'] ?? 'N/A',
+      Country: json['strCountry'] ?? 'N/A',
     );
   }
 }
