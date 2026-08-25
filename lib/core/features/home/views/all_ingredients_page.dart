@@ -50,7 +50,6 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
   @override
   Widget build(BuildContext context) {
     final items = isLoading ? List.generate(8, (_) => 0) : Ingredients;
-
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -66,7 +65,11 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
                 return _buildLoadingCard();
               }
               final ingredient = items[index] as AllIngredientsModel;
-              return MealCard(mealName: ingredient.name);
+              return MealCard(
+                mealName: ingredient.name,
+                mealImage: ingredient.ingredientImage,
+                description: ingredient.type,
+              );
             }, childCount: items.length),
           ),
         ),

@@ -18,16 +18,18 @@ class AllIngredientsModel {
   factory AllIngredientsModel.fromJson(Map<String, dynamic> json) {
     if (json['strDescription'] == null) {
       json['strDescription'] = 'No description available';
-      //json['strType'] = 'ingredient';
+      json['strType'] = 'ingredient';
     }
     if (json['strThumb'] == null) {
       json['strThumb'] =
           'https://www.themealdb.com/images/ingredients/chicken.png';
+    } else {
+      json['strThumb'] = json['strThumb'];
     }
     return AllIngredientsModel(
       idIngredient: json['idIngredient'],
       name: json['strIngredient'],
-      // ingredientImage: json['strThumb'],
+      ingredientImage: json['strThumb'],
       type: json['strType'],
     );
   }

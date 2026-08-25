@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
 
 class ListingBar extends StatelessWidget {
   ListingBar({
@@ -9,7 +10,7 @@ class ListingBar extends StatelessWidget {
 
   final int selectedIndex;
   final ValueChanged<int> onOptionSelected;
-
+  Color TextColor = AppColors.BlackTextColor;
   final List<String> listingOptions = [
     'all Ingredients',
     'all Areas',
@@ -30,13 +31,25 @@ class ListingBar extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
                 color: selectedIndex == index
-                    ? Colors.black
-                    : Colors.blueAccent,
+                    ? AppColors.SelectedColor
+                    : AppColors.secondaryColor,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 4.0,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(color: AppColors.secondaryColor),
               ),
               child: Text(
                 listingOptions[index],
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: selectedIndex == index
+                      ? AppColors.secondaryColor
+                      : AppColors.SelectedColor,
+                ),
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
 import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
 import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
@@ -58,8 +59,23 @@ class _AllAreasPageState extends State<AllAreasPage> {
               ],
             ),
             child: ListTile(
+              textColor: AppColors.SelectedColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
+              ),
+              tileColor: Colors.grey.withOpacity(0.1),
+              // tileColor: Colors.white,
+              leading: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Image.network(
+                  'https://www.vecteezy.com/free-vector/chef-hat',
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.restaurant_menu,
+                      color: AppColors.SelectedColor,
+                    );
+                  },
+                ),
               ),
               onTap: () {
                 Navigator.of(context).pushReplacement(
@@ -68,10 +84,32 @@ class _AllAreasPageState extends State<AllAreasPage> {
                   ),
                 );
               },
+              // Area and Country info
               title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Area: ${area.name}'),
-                  Text('Country: ${area.country}'),
+                  // area info
+                  Row(
+                    children: [
+                      Text(
+                        'Area:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 35),
+                      Text(area.name),
+                    ],
+                  ),
+                  // country info
+                  Row(
+                    children: [
+                      Text(
+                        'Country:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(width: 10),
+                      Text(area.country),
+                    ],
+                  ),
                 ],
               ),
             ),

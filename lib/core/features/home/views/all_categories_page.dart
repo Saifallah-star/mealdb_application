@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_category.dart';
 import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
 import 'package:mealdb_application/core/features/home/data/models/all_categories_model.dart';
@@ -89,14 +90,39 @@ class _AllCategoriesState extends State<AllCategories> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  tileColor: Colors.grey.withOpacity(0.1),
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => FilterByCategory(),
+                        builder: (context) =>
+                            FilterByCategory(name: category.name!),
                       ),
                     );
                   },
-                  title: Text(category.name ?? 'Unnamed Category'),
+                  title: Row(
+                    children: [
+                      const Icon(
+                        Icons.restaurant_menu,
+                        color: AppColors.SelectedColor,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Category: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.SelectedColor,
+                        ),
+                      ),
+                      SizedBox(width: 30),
+                      Text(
+                        category.name ?? 'Unnamed Category',
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.SelectedColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

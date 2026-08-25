@@ -3,7 +3,7 @@ import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/home/components/listingBarComponents/listing_bar.dart';
 import 'package:mealdb_application/core/features/home/components/search_bar.dart';
 import 'package:mealdb_application/core/features/home/views/all_areas_page.dart';
-import 'package:mealdb_application/core/features/home/views/all_categories.dart';
+import 'package:mealdb_application/core/features/home/views/all_categories_page.dart';
 import 'package:mealdb_application/core/features/home/views/all_ingredients_page.dart';
 import 'package:mealdb_application/core/shared/custom_text.dart';
 
@@ -45,11 +45,18 @@ class _RootState extends State<Root> {
             centerTitle: true,
             // expandedHeight: 190,
             collapsedHeight: 190,
-            title: CustomText(
-              text: 'mealdb',
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+            //mealdb
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.restaurant_menu, color: Colors.white, size: 40),
+                CustomText(
+                  text: 'mealdb',
+                  fontSize: 30,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
             ),
             flexibleSpace: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
