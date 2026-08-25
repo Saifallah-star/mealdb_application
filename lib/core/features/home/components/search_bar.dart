@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class Search extends StatelessWidget {
   final TextEditingController searchController;
-  const Search({super.key, required this.searchController});
+  final ValueChanged<String> onSubmitted;
+
+  const Search({
+    super.key,
+    required this.searchController,
+    required this.onSubmitted,
+  });
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,6 +30,9 @@ class Search extends StatelessWidget {
               vertical: 15.0,
             ),
           ),
+          onFieldSubmitted: (value) {
+            onSubmitted(value.trim());
+          },
         ),
       ),
     );

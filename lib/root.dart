@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
+import 'package:mealdb_application/core/features/Filters/views/meal_details_page.dart';
 import 'package:mealdb_application/core/features/home/components/listingBarComponents/listing_bar.dart';
 import 'package:mealdb_application/core/features/home/components/search_bar.dart';
 import 'package:mealdb_application/core/features/home/views/all_areas_page.dart';
@@ -32,6 +34,27 @@ class _RootState extends State<Root> {
     });
   }
 
+  Future<void> _searchMeal(String name) async {
+    if (name.isEmpty) return;
+
+    final meals = await FiltersRepo().searchMeals(name);
+    if (!mounted) return;
+
+    if (meals.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No meal found.')));
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            MealDP(model: meals.first, from: name, filterType: 'search'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +85,10 @@ class _RootState extends State<Root> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 130),
-                Search(searchController: searchController),
+                Search(
+                  searchController: searchController,
+                  onSubmitted: _searchMeal,
+                ),
                 //ListingBar
                 ListingBar(
                   selectedIndex: counter,

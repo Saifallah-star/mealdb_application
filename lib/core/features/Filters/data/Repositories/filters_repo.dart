@@ -6,6 +6,24 @@ import 'package:mealdb_application/core/network/dio_exceptions.dart';
 import 'package:mealdb_application/core/network/dio_service.dart';
 
 class FiltersRepo {
+  Future<List<FilterModel>> searchMeals(String name) async {
+    try {
+      final response = await DioService().get(
+        'search.php?s=${Uri.encodeQueryComponent(name)}',
+      );
+      if (response['meals'] == null) {
+        return [];
+      }
+      return (response['meals'] as List)
+          .map((e) => FilterModel.fromJson(e))
+          .toList();
+    } on DioException catch (e) {
+      throw ApiException.handleException(e);
+    } catch (e) {
+      throw ApiError(message: '(FiltersRepo) Failed to search meals: $e');
+    }
+  }
+
   Future<List<FilterModel>> FilterByIngredient(String name) async {
     try {
       final response = await DioService().get('filter.php?i=$name');

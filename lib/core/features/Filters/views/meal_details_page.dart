@@ -6,6 +6,7 @@ import 'package:mealdb_application/core/features/Filters/data/Repositories/filte
 import 'package:mealdb_application/core/features/Filters/views/filter_by_Ingredient.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_category.dart';
+import 'package:mealdb_application/root.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 
 class MealDP extends StatefulWidget {
@@ -132,7 +133,6 @@ class _MealDPState extends State<MealDP> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: const EdgeInsets.all(8),
-
                   child: Text(
                     mealModel?.Instructions ?? 'No instructions available.',
                     style: const TextStyle(fontSize: 17, color: Colors.white),
@@ -244,7 +244,11 @@ class _MealDPState extends State<MealDP> {
   }
 
   void NavigateBack(BuildContext context) {
-    if (widget.filterType == 'category') {
+    if (widget.filterType == 'search') {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => const Root()));
+    } else if (widget.filterType == 'category') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => FilterByCategory(name: widget.from),
