@@ -23,7 +23,8 @@ class _FilterByIngredientState extends State<FilterByIngredient> {
   Future<void> FilterByIngredient(String name) async {
     try {
       final response = await FiltersRepo().FilterByIngredient(name);
-
+      if (!mounted)
+        return; // to avoid calling setState if the widget is not mounted
       setState(() {
         Ingredients = response;
       });

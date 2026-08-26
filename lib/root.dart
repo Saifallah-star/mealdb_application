@@ -66,16 +66,19 @@ class _RootState extends State<Root> {
             backgroundColor: AppColors.primaryColor,
             automaticallyImplyLeading: false,
             centerTitle: true,
-            // expandedHeight: 190,
-            collapsedHeight: 190,
+            expandedHeight: 10,
+            collapsedHeight: 200,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+            ),
             //mealdb
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.restaurant_menu, color: Colors.white, size: 40),
+                Icon(Icons.restaurant_menu, color: Colors.white, size: 50),
                 CustomText(
                   text: 'mealdb',
-                  fontSize: 30,
+                  fontSize: 35,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -85,10 +88,12 @@ class _RootState extends State<Root> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 130),
+                //Search
                 Search(
                   searchController: searchController,
                   onSubmitted: _searchMeal,
                 ),
+                SizedBox(height: 10),
                 //ListingBar
                 ListingBar(
                   selectedIndex: counter,

@@ -48,6 +48,9 @@ class _MealDPState extends State<MealDP> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
+        shadowColor: AppColors.SelectedColor,
+        backgroundColor: AppColors.primaryColor,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.SelectedColor),
           onPressed: () {
@@ -66,7 +69,7 @@ class _MealDPState extends State<MealDP> {
               ),
             ),
           ),
-          Container(color: Colors.black.withOpacity(0.5)),
+          Container(color: Colors.black.withValues(alpha: 0.5)),
           SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.vertical,
@@ -129,7 +132,7 @@ class _MealDPState extends State<MealDP> {
                 //w Instructions === === === === === === === === === === === ===
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: const EdgeInsets.all(8),
@@ -143,7 +146,7 @@ class _MealDPState extends State<MealDP> {
                 //! Youtube link === === === === === === === === === === === ===
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: const EdgeInsets.all(8),
@@ -173,7 +176,7 @@ class _MealDPState extends State<MealDP> {
                 //w Ingredients List === === === === === === === === === === === ===
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: const EdgeInsets.all(8),

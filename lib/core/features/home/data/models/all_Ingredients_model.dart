@@ -10,11 +10,6 @@ class AllIngredientsModel {
     this.type = 'ingredient',
   });
 
-  //* idIngredient (ok)
-  //* strIngredient (ok)
-  //! strThumb (not ok)  (ingredientImage)
-  //! strType  (already null from API)
-
   factory AllIngredientsModel.fromJson(Map<String, dynamic> json) {
     if (json['strDescription'] == null) {
       json['strDescription'] = 'No description available';

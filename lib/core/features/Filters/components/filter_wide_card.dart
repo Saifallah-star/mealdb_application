@@ -7,12 +7,12 @@ class FilterWideCard extends StatefulWidget {
   final FilterModel model;
   final String In;
   final String filterType;
-  FilterWideCard({
-    Key? key,
+  const FilterWideCard({
+    super.key,
     required this.model,
     required this.In,
     required this.filterType,
-  }) : super(key: key);
+  });
   @override
   State<FilterWideCard> createState() => _FilterWideCardState();
 }

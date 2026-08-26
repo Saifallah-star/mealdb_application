@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/home/Cubit/home_cubit.dart';
+import 'package:mealdb_application/core/features/home/Cubit/home_states.dart';
 import 'package:mealdb_application/core/features/home/components/meal_card.dart';
 import 'package:mealdb_application/core/features/home/data/models/all_Ingredients_model.dart';
-import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AllIngredientsPage extends StatefulWidget {
@@ -12,68 +15,96 @@ class AllIngredientsPage extends StatefulWidget {
 }
 
 class _AllIngredientsPageState extends State<AllIngredientsPage> {
-  final TextEditingController searchController = TextEditingController();
-  final AllIngredientsModel allIngredientsModel = AllIngredientsModel(
-    idIngredient: '',
-    name: '',
-    type: '',
-    ingredientImage: '',
-  );
-
-  bool isLoading = true;
-  List<AllIngredientsModel> Ingredients = [];
-
-  Future<void> fetchIngredients() async {
-    try {
-      final homeRepo = HomeRepo();
-      final ingredients = await homeRepo.getIngredients();
-      if (!mounted) return;
-      setState(() {
-        Ingredients = ingredients;
-        isLoading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
-      print('Error fetching ingredients: $e');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    fetchIngredients();
+    context.read<HomeCubit>().loadIngredients();
   }
 
   @override
   Widget build(BuildContext context) {
-    final items = isLoading ? List.generate(8, (_) => 0) : Ingredients;
-    return CustomScrollView(
-      slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+    return BlocConsumer<HomeCubit, HomeStates>(
+      listener: (context, state) {
+        if (state is HomeError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        if (state is HomeError) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(state.message),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: context.read<HomeCubit>().loadIngredients,
+                  child: const Text('Retry'),
+                ),
+              ],
             ),
-            delegate: SliverChildBuilderDelegate((context, index) {
-              if (isLoading) {
-                return _buildLoadingCard();
-              }
-              final ingredient = items[index] as AllIngredientsModel;
-              return MealCard(
-                mealName: ingredient.name,
-                mealImage: ingredient.ingredientImage,
-                description: ingredient.type,
-              );
-            }, childCount: items.length),
+          );
+        }
+
+        final items = state is IngredientsLoaded
+            ? state.ingredients
+            : <AllIngredientsModel>[];
+        final isLoading = state is HomeLoading || state is HomeInitial;
+
+        if (isLoading) {
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildLoadingCard(),
+                    childCount: 8,
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        return RefreshIndicator(
+          color: AppColors.SelectedColor,
+          backgroundColor: Colors.white,
+          displacement: 2.0,
+          strokeWidth: 3.0,
+          triggerMode: RefreshIndicatorTriggerMode.anywhere,
+          onRefresh: context.read<HomeCubit>().loadIngredients,
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final ingredient = items[index];
+                    return MealCard(
+                      mealName: ingredient.name,
+                      mealImage: ingredient.ingredientImage,
+                      description: ingredient.type,
+                    );
+                  }, childCount: items.length),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 

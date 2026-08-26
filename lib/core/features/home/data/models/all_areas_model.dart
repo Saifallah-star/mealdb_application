@@ -5,7 +5,10 @@ class AllAreasModel {
   AllAreasModel({required this.name, required this.country});
 
   factory AllAreasModel.fromJson(Map<String, dynamic> json) {
-    return AllAreasModel(name: json['strArea'], country: json['strCountry']);
+    return AllAreasModel(
+      name: json['strArea'] as String? ?? 'Unknown area',
+      country: json['strCountry'] as String? ?? 'Unknown country',
+    );
   }
 
   Map<String, dynamic> toJson() {
