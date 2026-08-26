@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart';
+import 'package:mealdb_application/core/features/Filters/Cubit/filter_states.dart';
 import 'package:mealdb_application/core/features/Filters/components/filter_wide_card.dart';
-import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
-import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
-import 'package:mealdb_application/core/network/dio_error.dart';
 import 'package:mealdb_application/root.dart';
 
 class FilterByCategory extends StatefulWidget {
@@ -15,91 +15,129 @@ class FilterByCategory extends StatefulWidget {
 }
 
 class _FilterByCategoryState extends State<FilterByCategory> {
-  List<FilterModel> categories = [];
-  Future<bool> timeout = Future.delayed(const Duration(seconds: 2), () => true);
-
   @override
   void initState() {
     super.initState();
-    fetchCategories();
+    context.read<FilterCubit>().FilterByCategory(widget.name);
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> fetchCategories() async {
-    try {
-      final response = await FiltersRepo().FilterByCategory(widget.name);
-      setState(() {
-        categories = response;
-      });
-    } catch (e) {
-      throw ApiError(message: '(FilterByCategory) Failed to load data: $e');
+  void didUpdateWidget(covariant FilterByCategory oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.name != widget.name) {
+      context.read<FilterCubit>().FilterByCategory(widget.name);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const Root(count: 2)),
-            );
-          },
-        ),
-        title: Text(
-          'Meals with ${widget.name}',
-          style: const TextStyle(color: Colors.white),
-        ),
-      ),
-      body: categories.isEmpty
-          ? FutureBuilder<bool>(
-              future: timeout,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.SelectedColor,
-                    ),
-                  );
-                }
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.error,
-                        color: AppColors.SelectedColor,
-                        size: 50,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'No meals found for this category.',
-                        style: TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            )
-          : ListView.builder(
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return FilterWideCard(
-                  model: category,
-                  In: widget.name,
-                  filterType: 'category',
+    return BlocConsumer<FilterCubit, FilterStates>(
+      listener: (context, state) {
+        if (state is FilterError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          appBar: AppBar(
+            backgroundColor: AppColors.primaryColor,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Root(count: 2)),
                 );
               },
             ),
+            title: Text(
+              'Meals with ${widget.name}',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+          body: _buildBody(state),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(FilterStates state) {
+    if (state is FilterLoading || state is FilterInitial) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.SelectedColor),
+      );
+    }
+
+    if (state is FilterLoaded) {
+      return ListView.builder(
+        itemCount: state.response.length,
+        itemBuilder: (context, index) {
+          final category = state.response[index];
+          return FilterWideCard(
+            model: category,
+            In: widget.name,
+            filterType: 'category',
+          );
+        },
+      );
+    }
+
+    if (state is FilterEmpty) {
+      return const _FilterStateView(
+        icon: Icons.info_outline,
+        message: 'No meals found for this category.',
+      );
+    }
+
+    if (state is FilterError) {
+      return _FilterStateView(
+        icon: Icons.error_outline,
+        message: state.message,
+        onRetry: () {
+          context.read<FilterCubit>().FilterByCategory(widget.name);
+        },
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}
+
+class _FilterStateView extends StatelessWidget {
+  const _FilterStateView({
+    required this.icon,
+    required this.message,
+    this.onRetry,
+  });
+
+  final IconData icon;
+  final String message;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: AppColors.SelectedColor, size: 50),
+            const SizedBox(height: 12),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+            ),
+            if (onRetry != null) ...[
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

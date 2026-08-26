@@ -1,14 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_category.dart';
-import 'package:mealdb_application/core/features/home/Cubit/home_cubit.dart';
-import 'package:mealdb_application/core/features/home/Cubit/home_states.dart';
-import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Categories/categories_cubit.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Categories/categories_states.dart';
 import 'package:mealdb_application/core/features/home/data/models/all_categories_model.dart';
-import 'package:mealdb_application/core/network/dio_error.dart';
-import 'package:mealdb_application/core/network/dio_exceptions.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AllCategories extends StatefulWidget {
@@ -24,14 +20,14 @@ class _AllCategoriesState extends State<AllCategories> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().loadCategories();
+    context.read<CategoriesCubit>().loadCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeStates>(
+    return BlocConsumer<CategoriesCubit, CategoriesStates>(
       listener: (context, state) {
-        if (state is HomeError) {
+        if (state is CategoriesError) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
@@ -41,14 +37,15 @@ class _AllCategoriesState extends State<AllCategories> {
         }
       },
       builder: (context, state) {
-        bool isLoading = state is HomeLoading || state is HomeInitial;
+        bool isLoading =
+            state is CategoriesLoading || state is CategoriesInitial;
         return RefreshIndicator(
           color: AppColors.SelectedColor,
           backgroundColor: Colors.white,
           displacement: 2.0,
           strokeWidth: 3.0,
           triggerMode: RefreshIndicatorTriggerMode.anywhere,
-          onRefresh: context.read<HomeCubit>().loadCategories,
+          onRefresh: context.read<CategoriesCubit>().loadCategories,
           child: isLoading
               ? Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,

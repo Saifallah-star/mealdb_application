@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
-import 'package:mealdb_application/core/features/home/Cubit/areas_cubit.dart';
-import 'package:mealdb_application/core/features/home/Cubit/areas_states.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Areas/areas-states.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Areas/areas_cubit.dart';
 
 class AllAreasPage extends StatefulWidget {
   const AllAreasPage({super.key});
@@ -21,7 +21,7 @@ class _AllAreasPageState extends State<AllAreasPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AreasCubit, AreasState>(
+    return BlocBuilder<AreasCubit, AreasStates>(
       builder: (context, state) {
         if (state is AreasError) {
           return _buildErrorView(state.message);
@@ -160,7 +160,9 @@ class _AllAreasPageState extends State<AllAreasPage> {
             Text(message),
             const SizedBox(height: 12),
             ElevatedButton.icon(
-              onPressed: context.read<AreasCubit>().loadAreas,
+              onPressed: () {
+                context.read<AreasCubit>().loadAreas();
+              },
               icon: const Icon(Icons.refresh),
               label: const Text('Retry'),
             ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/home/Cubit/home_cubit.dart';
-import 'package:mealdb_application/core/features/home/Cubit/home_states.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Ingredients/ingredients_cubit.dart';
+import 'package:mealdb_application/core/features/home/Cubit/Ingredients/ingredients_states.dart';
 import 'package:mealdb_application/core/features/home/components/meal_card.dart';
 import 'package:mealdb_application/core/features/home/data/models/all_Ingredients_model.dart';
 import 'package:shimmer/shimmer.dart';
@@ -18,21 +18,21 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().loadIngredients();
+    context.read<IngredientsCubit>().loadIngredients();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeStates>(
+    return BlocConsumer<IngredientsCubit, IngredientsStates>(
       listener: (context, state) {
-        if (state is HomeError) {
+        if (state is IngredientsError) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
-        if (state is HomeError) {
+        if (state is IngredientsError) {
           return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -40,7 +40,7 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
                 Text(state.message),
                 const SizedBox(height: 12),
                 ElevatedButton(
-                  onPressed: context.read<HomeCubit>().loadIngredients,
+                  onPressed: context.read<IngredientsCubit>().loadIngredients,
                   child: const Text('Retry'),
                 ),
               ],
@@ -51,7 +51,8 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
         final items = state is IngredientsLoaded
             ? state.ingredients
             : <AllIngredientsModel>[];
-        final isLoading = state is HomeLoading || state is HomeInitial;
+        final isLoading =
+            state is IngredientsLoading || state is IngredientsInitial;
 
         if (isLoading) {
           return CustomScrollView(
@@ -80,7 +81,7 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
           displacement: 2.0,
           strokeWidth: 3.0,
           triggerMode: RefreshIndicatorTriggerMode.anywhere,
-          onRefresh: context.read<HomeCubit>().loadIngredients,
+          onRefresh: context.read<IngredientsCubit>().loadIngredients,
           child: CustomScrollView(
             slivers: [
               SliverPadding(

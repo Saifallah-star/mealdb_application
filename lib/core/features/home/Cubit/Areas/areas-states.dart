@@ -1,18 +1,18 @@
 import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
 
-abstract class AreasState {}
+abstract class AreasStates {}
 
-class AreasInitial extends AreasState {}
+class AreasInitial extends AreasStates {}
 
-class AreasLoading extends AreasState {}
+class AreasLoading extends AreasStates {}
 
-class AreasLoaded extends AreasState {
+class AreasLoaded extends AreasStates {
   final List<AllAreasModel> areas;
 
   AreasLoaded(this.areas);
 }
 
-class AreasError extends AreasState {
+class AreasError extends AreasStates {
   final String message;
 
   AreasError(this.message);
