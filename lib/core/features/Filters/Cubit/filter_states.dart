@@ -1,6 +1,6 @@
 import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
 
-abstract class FilterStates {}
+sealed class FilterStates {}
 
 class FilterInitial extends FilterStates {}
 

@@ -1,6 +1,6 @@
 import 'package:mealdb_application/core/features/home/data/models/all_Ingredients_model.dart';
 
-abstract class IngredientsStates {}
+sealed class IngredientsStates {}
 
 class IngredientsInitial extends IngredientsStates {}
 

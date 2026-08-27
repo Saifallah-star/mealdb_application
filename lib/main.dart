@@ -4,7 +4,7 @@ import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart
 import 'package:mealdb_application/core/features/home/Cubit/Areas/areas_cubit.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Categories/categories_cubit.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Ingredients/ingredients_cubit.dart';
-import 'package:mealdb_application/root.dart';
+import 'package:mealdb_application/splash.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.deepPurple,
           ),
         ),
-        home: Root(),
+        home: const SplashScreen(),
       ),
     );
   }

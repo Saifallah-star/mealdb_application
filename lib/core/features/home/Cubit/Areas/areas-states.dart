@@ -1,6 +1,6 @@
 import 'package:mealdb_application/core/features/home/data/models/all_areas_model.dart';
 
-abstract class AreasStates {}
+sealed class AreasStates {}
 
 class AreasInitial extends AreasStates {}
 

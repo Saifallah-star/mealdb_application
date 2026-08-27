@@ -75,12 +75,28 @@ class _RootState extends State<Root> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.restaurant_menu, color: Colors.white, size: 50),
-                CustomText(
-                  text: 'mealdb',
-                  fontSize: 35,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                Hero(
+                  tag: 'mealdb_icon',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Icon(
+                      Icons.restaurant_menu,
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  ),
+                ),
+                Hero(
+                  tag: 'mealdb_text',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: CustomText(
+                      text: 'mealdb',
+                      fontSize: 35,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),

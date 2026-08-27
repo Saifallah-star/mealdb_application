@@ -1,6 +1,6 @@
 import 'package:mealdb_application/core/features/home/data/models/all_categories_model.dart';
 
-abstract class CategoriesStates {}
+sealed class CategoriesStates {}
 
 class CategoriesInitial extends CategoriesStates {}
 
