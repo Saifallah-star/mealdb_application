@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Areas/areas-states.dart';
-import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
+import 'package:mealdb_application/core/features/home/data/Repository/home_remote_repo.dart';
 
 class AreasCubit extends Cubit<AreasStates> {
   AreasCubit() : super(AreasInitial());

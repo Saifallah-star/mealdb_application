@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Ingredients/ingredients_states.dart';
-import 'package:mealdb_application/core/features/home/data/Repository/home_repo.dart';
+import 'package:mealdb_application/core/features/home/data/Repository/home_remote_repo.dart';
 
 class IngredientsCubit extends Cubit<IngredientsStates> {
   IngredientsCubit() : super(IngredientsInitial());

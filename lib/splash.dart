@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/auth/views/login_page.dart';
 import 'package:mealdb_application/core/shared/custom_text.dart';
 import 'package:mealdb_application/root.dart';
 
@@ -44,7 +45,8 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.of(context).pushReplacement(
         PageRouteBuilder<void>(
           transitionDuration: const Duration(milliseconds: 900),
-          pageBuilder: (context, animation, secondaryAnimation) => const Root(),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const LoginPage(),
         ),
       );
     });
