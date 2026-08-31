@@ -32,10 +32,10 @@ class _AllAreasPageState extends State<AllAreasPage> {
 
         final areas = (state as AreasLoaded).areas;
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.primaryColor.withValues(alpha: 0.05),
           body: RefreshIndicator(
             color: AppColors.SelectedColor,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.primaryColor.withValues(alpha: 0.05),
             displacement: 2.0,
             strokeWidth: 3.0,
             triggerMode: RefreshIndicatorTriggerMode.anywhere,
@@ -68,9 +68,11 @@ class _AllAreasPageState extends State<AllAreasPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    tileColor: Colors.grey.withValues(alpha: 0.1),
+                    tileColor: AppColors.primaryColor.withValues(alpha: 0.1),
                     leading: CircleAvatar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: AppColors.primaryColor.withValues(
+                        alpha: 0.1,
+                      ),
                       child: const Icon(
                         Icons.restaurant_menu,
                         color: AppColors.SelectedColor,

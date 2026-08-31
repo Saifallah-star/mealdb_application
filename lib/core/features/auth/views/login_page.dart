@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
 import 'package:mealdb_application/core/features/auth/views/signup_page.dart';
 import 'package:mealdb_application/root.dart';
 
@@ -64,13 +66,13 @@ class _LoginPageState extends State<LoginPage> {
                         135,
                         104,
                         82,
-                      ).withOpacity(0.15),
+                      ).withValues(alpha: 0.15),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.restaurant_menu,
                         size: 60,
-                        color: AppColors.SelectedColor.withOpacity(0.8),
+                        color: AppColors.SelectedColor.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -80,14 +82,14 @@ class _LoginPageState extends State<LoginPage> {
                     'MealDB',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.SelectedColor.withOpacity(0.8),
+                      color: AppColors.SelectedColor.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Discover Delicious Recipes',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.SelectedColor.withOpacity(0.8),
+                      color: AppColors.SelectedColor.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 60),
@@ -112,13 +114,17 @@ class _LoginPageState extends State<LoginPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -180,13 +186,17 @@ class _LoginPageState extends State<LoginPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -204,68 +214,54 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 32),
                         // Login Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 4,
-                            ),
-                            onPressed: () {
-                              //! === === === === === === === === === === === === === === ===
-                              //! incorrect login logic, need to check the password as well
-                              //! === === === === === === === === === === === === === === ===
-                              UserDao userDao = UserDao();
-                              String email = _emailController.text.trim();
-                              String password = _passwordController.text.trim();
-                              // Validate email and password
-                              if (email.isEmpty || password.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Please enter email and password',
-                                    ),
+                        BlocConsumer<AuthCubit, AuthStates>(
+                          listener: (context, state) {
+                            if (state is AuthFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.message),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                            if (state is AuthSuccess) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Root(count: 0),
+                                ),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                );
-                                return;
-                              }
-                              userDao.getUserByEmail(email).then((user) {
-                                if (user != null) {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => const Root(),
-                                    ),
+                                  elevation: 4,
+                                ),
+                                onPressed: () {
+                                  context.read<AuthCubit>().login(
+                                    _emailController.text.trim(),
+                                    _passwordController.text.trim(),
                                   );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Login successful!'),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Invalid email or password',
+                                },
+                                child: Text(
+                                  'Login',
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                       ),
-                                    ),
-                                  );
-                                }
-                              });
-                            },
-                            child: Text(
-                              'Login',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                            ),
-                          ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 20),
                         // Forgot Password & Sign Up Links === === === ===

@@ -65,68 +65,77 @@ class _AllCategoriesState extends State<AllCategories> {
                     },
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 6.0,
-                        horizontal: 15.0,
-                      ),
-                      padding: const EdgeInsets.all(6.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4.0,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              : Scaffold(
+                  backgroundColor: AppColors.primaryColor.withValues(
+                    alpha: 0.05,
+                  ),
+                  body: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 6.0,
+                          horizontal: 15.0,
                         ),
-                        tileColor: Colors.grey.withValues(alpha: 0.1),
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  FilterByCategory(name: category.name!),
-                            ),
-                          );
-                        },
-                        title: Row(
-                          children: [
-                            const Icon(
-                              Icons.restaurant_menu,
-                              color: AppColors.SelectedColor,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              'Category: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.SelectedColor,
-                              ),
-                            ),
-                            SizedBox(width: 30),
-                            Text(
-                              category.name ?? 'Unnamed Category',
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: AppColors.SelectedColor,
-                              ),
+                        padding: const EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4.0,
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  },
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          tileColor: Colors.grey.withValues(alpha: 0.1),
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    FilterByCategory(name: category.name!),
+                              ),
+                            );
+                          },
+                          title: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: AppColors.primaryColor
+                                    .withValues(alpha: 0.1),
+                                child: const Icon(
+                                  Icons.restaurant_menu,
+                                  color: AppColors.SelectedColor,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                'Category: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.SelectedColor,
+                                ),
+                              ),
+                              SizedBox(width: 30),
+                              Text(
+                                category.name ?? 'Unnamed Category',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: AppColors.SelectedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
         );
       },

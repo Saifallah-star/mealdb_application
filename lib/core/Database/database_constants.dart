@@ -1,6 +1,6 @@
 abstract class DBConstants {
   static final String databaseName = 'mealdb.db';
-  static final int databaseVersion = 1;
+  static final int databaseVersion = 2;
 
   // users table === ===
   static final String usersTable = 'Users';

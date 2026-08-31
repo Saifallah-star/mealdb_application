@@ -58,6 +58,8 @@ class _FilterWideCardState extends State<FilterWideCard> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          tileColor: AppColors.primaryColor.withValues(alpha: 0.08),
+          textColor: Colors.black87,
           title: Column(
             children: [
               Image.network(

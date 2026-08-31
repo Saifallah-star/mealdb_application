@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
+import 'package:mealdb_application/core/features/auth/data/models/user_model.dart';
+import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
+import 'package:mealdb_application/root.dart';
+import 'package:uuid/uuid.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -68,13 +75,13 @@ class _SignupPageState extends State<SignupPage> {
                         135,
                         104,
                         82,
-                      ).withOpacity(0.15),
+                      ).withValues(alpha: 0.15),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.restaurant_menu,
                         size: 50,
-                        color: AppColors.SelectedColor.withOpacity(0.8),
+                        color: AppColors.SelectedColor.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -84,14 +91,14 @@ class _SignupPageState extends State<SignupPage> {
                     'Create Account',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.SelectedColor.withOpacity(0.8),
+                      color: AppColors.SelectedColor.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Join MealDB and explore amazing recipes',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.SelectedColor.withOpacity(0.8),
+                      color: AppColors.SelectedColor.withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -116,13 +123,17 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -162,13 +173,17 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -229,13 +244,17 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -293,13 +312,17 @@ class _SignupPageState extends State<SignupPage> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: AppColors.primaryColor.withOpacity(0.3),
+                                color: AppColors.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -326,32 +349,56 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 28),
                         // Signup Button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 4,
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                // Handle signup logic here
-                              }
-                            },
-                            child: Text(
-                              'Sign Up',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                        BlocConsumer<AuthCubit, AuthStates>(
+                          listener: (context, state) {
+                            if (state is AuthSuccess) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const Root(count: 0),
+                                ),
+                              );
+                            } else if (state is AuthFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(state.message),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                            ),
-                          ),
+                                  elevation: 4,
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    context.read<AuthCubit>().SignUp(
+                                      _nameController.text,
+                                      _emailController.text,
+                                      _passwordController.text,
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Sign Up',
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 16),
                         // Login Link

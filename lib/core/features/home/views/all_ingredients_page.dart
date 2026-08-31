@@ -82,27 +82,31 @@ class _AllIngredientsPageState extends State<AllIngredientsPage> {
           strokeWidth: 3.0,
           triggerMode: RefreshIndicatorTriggerMode.anywhere,
           onRefresh: context.read<IngredientsCubit>().loadIngredients,
-          child: CustomScrollView(
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+          child: Scaffold(
+            backgroundColor: AppColors.primaryColor.withValues(alpha: 0.05),
+            body: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  sliver: SliverGrid(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final ingredient = items[index];
+                      return MealCard(
+                        mealName: ingredient.name,
+                        mealImage: ingredient.ingredientImage,
+                        description: ingredient.type,
+                      );
+                    }, childCount: items.length),
                   ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final ingredient = items[index];
-                    return MealCard(
-                      mealName: ingredient.name,
-                      mealImage: ingredient.ingredientImage,
-                      description: ingredient.type,
-                    );
-                  }, childCount: items.length),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
