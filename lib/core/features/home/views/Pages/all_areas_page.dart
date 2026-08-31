@@ -29,13 +29,12 @@ class _AllAreasPageState extends State<AllAreasPage> {
         if (state is AreasLoading || state is AreasInitial) {
           return _buildLoadingView();
         }
-
         final areas = (state as AreasLoaded).areas;
         return Scaffold(
           backgroundColor: AppColors.primaryColor.withValues(alpha: 0.05),
           body: RefreshIndicator(
             color: AppColors.SelectedColor,
-            backgroundColor: AppColors.primaryColor.withValues(alpha: 0.05),
+            backgroundColor: Colors.white,
             displacement: 2.0,
             strokeWidth: 3.0,
             triggerMode: RefreshIndicatorTriggerMode.anywhere,

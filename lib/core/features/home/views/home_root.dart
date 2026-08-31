@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
+import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
+import 'package:mealdb_application/core/features/Filters/views/meal_details_page.dart';
+import 'package:mealdb_application/core/features/home/components/listing_bar.dart';
+import 'package:mealdb_application/core/features/home/components/search_bar.dart';
+import 'package:mealdb_application/core/features/home/views/Pages/all_areas_page.dart';
+import 'package:mealdb_application/core/features/home/views/Pages/all_categories_page.dart';
+import 'package:mealdb_application/core/features/home/views/Pages/all_ingredients_page.dart';
+import 'package:mealdb_application/core/shared/custom_text.dart';
+
+class HomeRoot extends StatefulWidget {
+  HomeRoot({super.key, this.count = 0});
+  final int count;
+
+  @override
+  State<HomeRoot> createState() => _HomeRootState();
+}
+
+class _HomeRootState extends State<HomeRoot> {
+  int counter = 1;
+  int count = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    counter = widget.count;
+  }
+
+  final TextEditingController searchController = TextEditingController();
+
+  void _onListingOptionSelected(int index) {
+    setState(() {
+      counter = index;
+    });
+  }
+
+  // inside _RootState
+  int navIndex = 1; // whatever "home"/default tab you want
+  void _onNavItemSelected(int index) {
+    setState(() {
+      navIndex = index;
+    });
+    // navigate to Settings / Favourites / Profile pages here,
+    // e.g. Navigator.push(...) or swap another IndexedStack
+  }
+
+  Future<void> _searchMeal(String name) async {
+    if (name.isEmpty) return;
+
+    final meals = await FiltersRepo().searchMeals(name);
+    if (!mounted) return;
+
+    if (meals.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No meal found.')));
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            MealDP(model: meals.first, from: name, filterType: 'search'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            backgroundColor: AppColors.primaryColor,
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            expandedHeight: 10,
+            collapsedHeight: 200,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+            ),
+            //mealdb
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.restaurant_menu, color: Colors.white, size: 50),
+                CustomText(
+                  text: 'mealdb',
+                  fontSize: 35,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
+            ),
+            flexibleSpace: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 130),
+                //Search
+                Search(
+                  searchController: searchController,
+                  onSubmitted: _searchMeal,
+                ),
+                SizedBox(height: 10),
+                //ListingBar
+                ListingBar(
+                  selectedIndex: counter,
+                  onOptionSelected: _onListingOptionSelected,
+                ),
+              ],
+            ),
+          ),
+          SliverFillRemaining(
+            child: IndexedStack(
+              // 1 - Home (your existing browsing view)
+              index: counter,
+              children: [AllIngredientsPage(), AllAreasPage(), AllCategories()],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

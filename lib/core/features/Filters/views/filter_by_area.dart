@@ -4,6 +4,7 @@ import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_states.dart';
 import 'package:mealdb_application/core/features/Filters/components/filter_wide_card.dart';
+import 'package:mealdb_application/core/features/home/views/home_root.dart';
 import 'package:mealdb_application/root.dart';
 
 class FilterByArea extends StatefulWidget {
@@ -49,7 +50,7 @@ class _FilterByAreaState extends State<FilterByArea> {
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const Root(count: 1)),
+                  MaterialPageRoute(builder: (context) => Root(H_index: 1)),
                 );
               },
             ),

@@ -6,6 +6,7 @@ import 'package:mealdb_application/core/features/Filters/data/Repositories/filte
 import 'package:mealdb_application/core/features/Filters/views/filter_by_Ingredient.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_category.dart';
+import 'package:mealdb_application/core/features/home/views/home_root.dart';
 import 'package:mealdb_application/root.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 
@@ -250,7 +251,7 @@ class _MealDPState extends State<MealDP> {
     if (widget.filterType == 'search') {
       Navigator.of(
         context,
-      ).pushReplacement(MaterialPageRoute(builder: (context) => const Root()));
+      ).pushReplacement(MaterialPageRoute(builder: (context) => Root()));
     } else if (widget.filterType == 'category') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

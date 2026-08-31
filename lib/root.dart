@@ -1,131 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/Filters/data/Repositories/filters_repo.dart';
-import 'package:mealdb_application/core/features/Filters/views/meal_details_page.dart';
-import 'package:mealdb_application/core/features/home/components/listingBarComponents/listing_bar.dart';
-import 'package:mealdb_application/core/features/home/components/search_bar.dart';
-import 'package:mealdb_application/core/features/home/views/all_areas_page.dart';
-import 'package:mealdb_application/core/features/home/views/all_categories_page.dart';
-import 'package:mealdb_application/core/features/home/views/all_ingredients_page.dart';
-import 'package:mealdb_application/core/shared/custom_text.dart';
+import 'package:mealdb_application/core/features/auth/views/profile_page.dart';
+import 'package:mealdb_application/core/features/favorites__Local/views/fav_page.dart';
+import 'package:mealdb_application/core/features/home/views/home_root.dart';
+import 'package:mealdb_application/core/features/settings/views/settings_page.dart';
+import 'package:mealdb_application/core/shared/bottom_nav_bar.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key, this.count = 0});
-  final int count;
+  int? H_index;
+  String? userId;
+  Root({super.key, this.H_index, this.userId});
 
   @override
-  State<Root> createState() => _RootState();
+  State<Root> createState() => _HomeRootState();
 }
 
-class _RootState extends State<Root> {
-  int counter = 0;
+class _HomeRootState extends State<Root> {
+  // inside _RootState
+  int navIndex = 1; // whatever "home"/default tab you want
+  void _onNavItemSelected(int index) {
+    setState(() {
+      navIndex = index;
+    });
+    // navigate to Settings / Favourites / Profile pages here,
+    // e.g. Navigator.push(...) or swap another IndexedStack
+  }
 
+  int homeIndex = 0; // default to Home tab
   @override
   void initState() {
     super.initState();
-    counter = widget.count;
-  }
-
-  final TextEditingController searchController = TextEditingController();
-
-  void _onListingOptionSelected(int index) {
-    setState(() {
-      counter = index;
-    });
-  }
-
-  Future<void> _searchMeal(String name) async {
-    if (name.isEmpty) return;
-
-    final meals = await FiltersRepo().searchMeals(name);
-    if (!mounted) return;
-
-    if (meals.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No meal found.')));
-      return;
+    if (widget.H_index != null) {
+      homeIndex = widget.H_index!;
     }
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) =>
-            MealDP(model: meals.first, from: name, filterType: 'search'),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            backgroundColor: AppColors.primaryColor,
-            automaticallyImplyLeading: false,
-            centerTitle: true,
-            expandedHeight: 10,
-            collapsedHeight: 200,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-            ),
-            //mealdb
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Hero(
-                  tag: 'mealdb_icon',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Icon(
-                      Icons.restaurant_menu,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  ),
-                ),
-                Hero(
-                  tag: 'mealdb_text',
-                  child: Material(
-                    color: Colors.transparent,
-                    child: CustomText(
-                      text: 'mealdb',
-                      fontSize: 35,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            flexibleSpace: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 130),
-                //Search
-                Search(
-                  searchController: searchController,
-                  onSubmitted: _searchMeal,
-                ),
-                SizedBox(height: 10),
-                //ListingBar
-                ListingBar(
-                  selectedIndex: counter,
-                  onOptionSelected: _onListingOptionSelected,
-                ),
-              ],
-            ),
+    return Stack(
+      children: [
+        IndexedStack(
+          index: navIndex,
+          children: [
+            FavPage(), // 0 - Favourites
+            HomeRoot(count: homeIndex), // 1 - Home
+            SettingsPage(), // 2 - Settings
+            ProfilePage(id: widget.userId!), // 3 - Profile
+          ],
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: GlassBottomNav(
+            selectedIndex: navIndex,
+            onItemSelected: _onNavItemSelected,
           ),
-          SliverFillRemaining(
-            child: IndexedStack(
-              index: counter,
-              children: [AllIngredientsPage(), AllAreasPage(), AllCategories()],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

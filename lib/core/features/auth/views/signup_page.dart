@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
-import 'package:mealdb_application/core/features/auth/data/models/user_model.dart';
-import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
 import 'package:mealdb_application/root.dart';
-import 'package:uuid/uuid.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -353,9 +350,7 @@ class _SignupPageState extends State<SignupPage> {
                           listener: (context, state) {
                             if (state is AuthSuccess) {
                               Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => const Root(count: 0),
-                                ),
+                                MaterialPageRoute(builder: (context) => Root()),
                               );
                             } else if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(

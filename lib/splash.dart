@@ -78,28 +78,18 @@ class _SplashScreenState extends State<SplashScreen>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Hero(
-                    tag: 'mealdb_icon',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Icon(
-                        Icons.restaurant_menu,
-                        color: Colors.white,
-                        size: MediaQuery.of(context).size.width * 0.22,
-                      ),
-                    ),
+                  Icon(
+                    Icons.restaurant_menu,
+                    color: Colors.white,
+                    size:
+                        MediaQuery.of(context).size.width *
+                        0.15, // Responsive size
                   ),
-                  Hero(
-                    tag: 'mealdb_text',
-                    child: Material(
-                      color: Colors.transparent,
-                      child: CustomText(
-                        text: 'mealdb',
-                        fontSize: MediaQuery.of(context).size.width * 0.15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  CustomText(
+                    text: 'mealdb',
+                    fontSize: MediaQuery.of(context).size.width * 0.15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ],
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
+import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
 import 'package:mealdb_application/core/features/auth/views/signup_page.dart';
 import 'package:mealdb_application/root.dart';
 
@@ -15,15 +16,15 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
+    _emailController.text = 'malek@gmail.com';
+    _passwordController.text = '123456';
   }
 
   @override
@@ -216,19 +217,17 @@ class _LoginPageState extends State<LoginPage> {
                         // Login Button
                         BlocConsumer<AuthCubit, AuthStates>(
                           listener: (context, state) {
-                            if (state is AuthFailure) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(state.message),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
                             if (state is AuthSuccess) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => const Root(count: 0),
+                                  builder: (context) =>
+                                      Root(userId: state.user.id),
                                 ),
+                              );
+                            }
+                            if (state is AuthFailure) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(state.message)),
                               );
                             }
                           },
@@ -246,8 +245,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 onPressed: () {
                                   context.read<AuthCubit>().login(
-                                    _emailController.text.trim(),
-                                    _passwordController.text.trim(),
+                                    _emailController.text,
+                                    _passwordController.text,
                                   );
                                 },
                                 child: Text(

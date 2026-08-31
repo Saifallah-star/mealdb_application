@@ -8,17 +8,20 @@ class AuthCubit extends Cubit<AuthStates> {
 
   AuthCubit(this._userDao) : super(AuthInitial());
 
-  Future<void> login(String email, String password) async {
+  Future<UserModel> login(String email, String password) async {
     emit(AuthLoading());
     try {
       final user = await _userDao.getUserByEmail(email);
       if (user != null && user.password == password) {
         emit(AuthSuccess(user));
+        return user;
       } else {
         emit(AuthFailure('Invalid email or password'));
+        throw Exception('Invalid email or password');
       }
     } catch (e) {
       emit(AuthFailure('An error occurred: $e'));
+      throw Exception('An error occurred: $e');
     }
   }
 
