@@ -7,8 +7,7 @@ import 'package:mealdb_application/core/shared/bottom_nav_bar.dart';
 
 class Root extends StatefulWidget {
   int? H_index;
-  String? userId;
-  Root({super.key, this.H_index, this.userId});
+  Root({super.key, this.H_index});
 
   @override
   State<Root> createState() => _HomeRootState();
@@ -44,7 +43,7 @@ class _HomeRootState extends State<Root> {
             FavPage(), // 0 - Favourites
             HomeRoot(count: homeIndex), // 1 - Home
             SettingsPage(), // 2 - Settings
-            ProfilePage(id: widget.userId!), // 3 - Profile
+            ProfilePage(), // 3 - Profile
           ],
         ),
         Positioned(

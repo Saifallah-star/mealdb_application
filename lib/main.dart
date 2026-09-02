@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
 import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
@@ -32,7 +33,15 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             brightness: Brightness.light,
-            seedColor: Colors.deepPurple,
+            seedColor: AppColors.primaryColor,
+          ),
+          snackBarTheme: SnackBarThemeData(
+            behavior: SnackBarBehavior.floating,
+            insetPadding: const EdgeInsets.fromLTRB(16, 0, 16, 88),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            contentTextStyle: const TextStyle(color: Colors.white),
           ),
         ),
         home: const SplashScreen(),

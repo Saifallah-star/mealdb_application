@@ -17,12 +17,10 @@ class UserDao {
 
     await db.insert(
       DBConstants.usersTable,
-      user.toJson(),
+      user.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-
     await _debugUsersTable();
-
     return await getUserByEmail(email);
   }
 
@@ -35,18 +33,16 @@ class UserDao {
       whereArgs: [id],
     );
 
-    await _debugUsersTable();
-
     if (maps.isNotEmpty) {
-      return UserModel.fromJson(maps.first);
+      await _debugUsersTable();
+      return UserModel.fromMap(maps.first);
     }
-
+    await _debugUsersTable();
     return null; // Return null if no user is found
   }
 
   Future<UserModel?> getUserByEmail(String email) async {
-    debugPrint('Searching for user with email: $email');
-    debugPrint('path is : ${await await getDatabasesPath()}');
+    debugPrint('getting user by email: $email');
 
     final db = await _appDatabase.database;
 
@@ -56,12 +52,11 @@ class UserDao {
       whereArgs: [email],
     );
 
-    await _debugUsersTable();
-
     if (maps.isNotEmpty) {
-      return UserModel.fromJson(maps.first);
+      await _debugUsersTable();
+      return UserModel.fromMap(maps.first);
     }
-
+    await _debugUsersTable();
     return null; // Return null if no user is found
   }
 
@@ -71,12 +66,31 @@ class UserDao {
 
     await db.update(
       DBConstants.usersTable,
-      user.toJson(),
+      user.toMap(),
       where: '${DBConstants.idColumn} = ?',
       whereArgs: [user.id],
     );
-
     await _debugUsersTable();
+  }
+
+  Future<void> updateProfileImage(String id, String? path) async {
+    final db = await _appDatabase.database;
+    await db.update(
+      DBConstants.usersTable,
+      {DBConstants.columnProfileImage: path},
+      where: '${DBConstants.idColumn} = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> updateUserInfo(String id, String name, String email) async {
+    final db = await _appDatabase.database;
+    await db.update(
+      DBConstants.usersTable,
+      {DBConstants.nameColumn: name, DBConstants.emailColumn: email},
+      where: '${DBConstants.idColumn} = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<void> _debugUsersTable() async {

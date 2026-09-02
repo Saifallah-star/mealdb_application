@@ -28,9 +28,12 @@ class _AllCategoriesState extends State<AllCategories> {
     return BlocConsumer<CategoriesCubit, CategoriesStates>(
       listener: (context, state) {
         if (state is CategoriesError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.errorColor,
+            ),
+          );
         }
         if (state is CategoriesLoaded) {
           categories = state.categories;

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
 import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
-import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
 import 'package:mealdb_application/core/features/auth/views/signup_page.dart';
 import 'package:mealdb_application/root.dart';
 
@@ -19,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-
+  // String id = '';
   @override
   void initState() {
     super.initState();
@@ -219,19 +218,20 @@ class _LoginPageState extends State<LoginPage> {
                           listener: (context, state) {
                             if (state is AuthSuccess) {
                               Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Root(userId: state.user.id),
-                                ),
+                                MaterialPageRoute(builder: (context) => Root()),
                               );
                             }
                             if (state is AuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(state.message)),
+                                SnackBar(
+                                  content: Text(state.message),
+                                  backgroundColor: AppColors.errorColor,
+                                ),
                               );
                             }
                           },
                           builder: (context, state) {
+                            bool isLoading = state is AuthLoading;
                             return SizedBox(
                               width: double.infinity,
                               height: 56,
@@ -242,22 +242,42 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   elevation: 4,
+                                  disabledBackgroundColor: AppColors
+                                      .primaryColor
+                                      .withValues(alpha: 0.5),
                                 ),
-                                onPressed: () {
-                                  context.read<AuthCubit>().login(
-                                    _emailController.text,
-                                    _passwordController.text,
-                                  );
-                                },
-                                child: Text(
-                                  'Login',
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        debugPrint('Login button pressed');
+                                        context.read<AuthCubit>().login(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                        );
+                                      },
+                                child: isLoading
+                                    ? SizedBox(
+                                        height: 24,
+                                        width: 24,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Login',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
                                       ),
-                                ),
                               ),
                             );
                           },

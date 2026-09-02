@@ -10,30 +10,25 @@ class AppDatabase {
   static Database? _database;
 
   Future<Database> get database async {
-    debugPrint(await getDatabasesPath());
+    // debugPrint(await getDatabasesPath());
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
   Future<Database?> _initDatabase() async {
+    debugPrint('Database path is : ${await getDatabasesPath()}');
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, DBConstants.databaseName);
     return await openDatabase(
       path,
       version: DBConstants.databaseVersion,
       onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < newVersion) {
-          // Drop old Users table and recreate with TEXT id
-          await db.execute('DROP TABLE IF EXISTS ${DBConstants.usersTable}');
-          await db.execute('''
-            CREATE TABLE ${DBConstants.usersTable}(
-              ${DBConstants.idColumn} TEXT PRIMARY KEY NOT NULL,
-              ${DBConstants.nameColumn} TEXT NOT NULL,
-              ${DBConstants.emailColumn} TEXT NOT NULL,
-              ${DBConstants.passwordColumn} TEXT NOT NULL
-            )
-          ''');
+        if (oldVersion < 3) {
+          await db.execute(
+            'ALTER TABLE ${DBConstants.usersTable} '
+            'ADD COLUMN ${DBConstants.columnProfileImage} TEXT',
+          );
         }
       },
 
@@ -48,7 +43,8 @@ class AppDatabase {
             ${DBConstants.idColumn} TEXT PRIMARY KEY NOT NULL,
             ${DBConstants.nameColumn} TEXT NOT NULL,
             ${DBConstants.emailColumn} TEXT NOT NULL,
-            ${DBConstants.passwordColumn} TEXT NOT NULL
+            ${DBConstants.passwordColumn} TEXT NOT NULL,
+            ${DBConstants.columnProfileImage} TEXT
           )
         ''');
 

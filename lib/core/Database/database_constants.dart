@@ -1,6 +1,6 @@
 abstract class DBConstants {
   static final String databaseName = 'mealdb.db';
-  static final int databaseVersion = 2;
+  static final int databaseVersion = 3;
 
   // users table === ===
   static final String usersTable = 'Users';
@@ -8,6 +8,7 @@ abstract class DBConstants {
   static final String nameColumn = 'name';
   static final String emailColumn = 'email';
   static final String passwordColumn = 'password';
+  static final String columnProfileImage = 'profile_image';
 
   //favorite meals table === ===
   static final String mealsTable = 'Meals';

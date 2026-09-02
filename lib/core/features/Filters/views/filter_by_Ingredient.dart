@@ -4,7 +4,6 @@ import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_states.dart';
 import 'package:mealdb_application/core/features/Filters/components/filter_wide_card.dart';
-import 'package:mealdb_application/core/features/home/views/home_root.dart';
 import 'package:mealdb_application/root.dart';
 
 class FilterByIngredient extends StatefulWidget {
@@ -35,9 +34,12 @@ class _FilterByIngredientState extends State<FilterByIngredient> {
     return BlocConsumer<FilterCubit, FilterStates>(
       listener: (context, state) {
         if (state is FilterError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: AppColors.errorColor,
+            ),
+          );
         }
       },
       builder: (BuildContext context, FilterStates state) {

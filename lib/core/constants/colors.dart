@@ -6,4 +6,6 @@ class AppColors {
   static const Color SelectedColor = Color(0xfff502b0f);
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color BlackTextColor = Color(0xFF000000);
+  static const Color successColor = Color(0xFF2E7D32);
+  static const Color errorColor = Color(0xFFC62828);
 }

@@ -10,7 +10,7 @@ import 'package:mealdb_application/core/features/home/views/Pages/all_ingredient
 import 'package:mealdb_application/core/shared/custom_text.dart';
 
 class HomeRoot extends StatefulWidget {
-  HomeRoot({super.key, this.count = 0});
+  const HomeRoot({super.key, this.count = 0});
   final int count;
 
   @override
@@ -52,9 +52,12 @@ class _HomeRootState extends State<HomeRoot> {
     if (!mounted) return;
 
     if (meals.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No meal found.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No meal found.'),
+          backgroundColor: AppColors.errorColor,
+        ),
+      );
       return;
     }
 
