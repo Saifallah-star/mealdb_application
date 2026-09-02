@@ -6,8 +6,9 @@ import 'package:mealdb_application/core/features/settings/views/settings_page.da
 import 'package:mealdb_application/core/shared/bottom_nav_bar.dart';
 
 class Root extends StatefulWidget {
-  int? H_index;
-  Root({super.key, this.H_index});
+  final int? H_index;
+  final int? navIndex;
+  const Root({super.key, this.H_index, this.navIndex});
 
   @override
   State<Root> createState() => _HomeRootState();
@@ -30,6 +31,9 @@ class _HomeRootState extends State<Root> {
     super.initState();
     if (widget.H_index != null) {
       homeIndex = widget.H_index!;
+    }
+    if (widget.navIndex != null) {
+      navIndex = widget.navIndex!;
     }
   }
 

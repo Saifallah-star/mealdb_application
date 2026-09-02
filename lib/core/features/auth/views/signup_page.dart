@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
-import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
-import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth/auth_cubit.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth/auth_states.dart';
 import 'package:mealdb_application/root.dart';
 
 class SignupPage extends StatefulWidget {

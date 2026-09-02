@@ -1,6 +1,6 @@
 abstract class DBConstants {
   static final String databaseName = 'mealdb.db';
-  static final int databaseVersion = 3;
+  static final int databaseVersion = 4;
 
   // users table === ===
   static final String usersTable = 'Users';
@@ -14,13 +14,9 @@ abstract class DBConstants {
   static final String mealsTable = 'Meals';
   static final String mealIdColumn = 'id';
   static final String mealNameColumn = 'name';
-  static final String mealCategoryColumn = 'category';
-  static final String mealAreaColumn = 'area';
-  static final String mealInstructionsColumn = 'instructions';
   static final String mealImageColumn = 'image';
-  static final String mealYoutubeColumn = 'youtube';
-  static final String mealIngredientColumn = 'ingredient';
-  static final String mealMeasureColumn = 'measure';
+  static final String mealAreaColumn = 'area';
+  static final String mealCountryColumn = 'country';
   // Foreign key to the Users table
   static final String userIdColumn = 'user_id';
 }

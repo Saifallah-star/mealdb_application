@@ -1,4 +1,4 @@
-import 'package:mealdb_application/core/features/auth/cubit/auth_states.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth/auth_states.dart';
 import 'package:mealdb_application/core/features/auth/data/models/user_model.dart';
 import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

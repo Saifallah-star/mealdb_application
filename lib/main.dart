@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/Cubit/filter_cubit.dart';
-import 'package:mealdb_application/core/features/auth/cubit/auth_cubit.dart';
+import 'package:mealdb_application/core/features/auth/cubit/auth/auth_cubit.dart';
 import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
+import 'package:mealdb_application/core/features/favorites__Local/cubit/favorites_cubit.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Areas/areas_cubit.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Categories/categories_cubit.dart';
 import 'package:mealdb_application/core/features/home/Cubit/Ingredients/ingredients_cubit.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AreasCubit()),
         BlocProvider(create: (context) => FilterCubit()),
         BlocProvider(create: (context) => AuthCubit(UserDao())),
+        BlocProvider(create: (context) => FavoritesCubit()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

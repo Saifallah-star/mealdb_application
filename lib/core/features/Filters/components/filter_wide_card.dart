@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
+import 'package:mealdb_application/core/features/Filters/data/Models/meal_model.dart';
 import 'package:mealdb_application/core/features/Filters/views/meal_details_page.dart';
+import 'package:mealdb_application/core/features/favorites__Local/cubit/favorites_cubit.dart';
+import 'package:mealdb_application/core/features/favorites__Local/cubit/favorites_state.dart';
+import 'package:mealdb_application/core/utils/pref_helper.dart';
 
 class FilterWideCard extends StatefulWidget {
   final FilterModel model;
@@ -19,13 +24,57 @@ class FilterWideCard extends StatefulWidget {
 
 class _FilterWideCardState extends State<FilterWideCard> {
   late String fromPage;
+  String? _userId;
+
   @override
   void initState() {
     super.initState();
     fromPage = widget.model.toString();
+    _loadUserId();
   }
 
-  // Initialize fromPage with the value from the model;
+  Future<void> _loadUserId() async {
+    final userId = await PrefHelper.getUserId();
+    if (mounted) {
+      setState(() {
+        _userId = userId;
+      });
+      if (userId != null && userId.isNotEmpty) {
+        final cubit = context.read<FavoritesCubit>();
+        if (cubit.state is FavoritesInitial) {
+          cubit.loadFavorites(userId);
+        }
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    final userId = _userId ?? await PrefHelper.getUserId();
+    if (userId == null || userId.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please log in to manage favorites.'),
+            backgroundColor: AppColors.errorColor,
+          ),
+        );
+      }
+      return;
+    }
+
+    final meal = MealModel(
+      id: widget.model.id,
+      name: widget.model.name,
+      imageUrl: widget.model.imageUrl,
+      Area: widget.model.Area,
+      Country: widget.model.Country,
+    );
+
+    if (mounted) {
+      context.read<FavoritesCubit>().toggleFavorite(meal, userId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -62,26 +111,67 @@ class _FilterWideCardState extends State<FilterWideCard> {
           textColor: Colors.black87,
           title: Column(
             children: [
-              Image.network(
-                widget.model.imageUrl,
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
-                    Icons.restaurant_menu,
-                    color: AppColors.SelectedColor,
-                    size: 50,
-                  );
-                },
+              Stack(
+                children: [
+                  Image.network(
+                    widget.model.imageUrl,
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.restaurant_menu,
+                        color: AppColors.SelectedColor,
+                        size: 50,
+                      );
+                    },
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 155,
+                    bottom: 155,
+                    child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                      builder: (context, state) {
+                        final isFavorite = state is FavoritesLoaded &&
+                            state.favorites.any((m) => m.id == widget.model.id);
+
+                        return IconButton(
+                          icon: isFavorite
+                              ? const CircleAvatar(
+                                  backgroundColor: Color.fromARGB(
+                                    221,
+                                    255,
+                                    255,
+                                    255,
+                                  ),
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
+                                )
+                              : const CircleAvatar(
+                                  backgroundColor: Color.fromARGB(
+                                    221,
+                                    255,
+                                    255,
+                                    255,
+                                  ),
+                                  child: Icon(Icons.favorite_border),
+                                ),
+                          onPressed: _toggleFavorite,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8.0),
-              // Name
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Name: ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
                     child: Text(
@@ -95,9 +185,9 @@ class _FilterWideCardState extends State<FilterWideCard> {
               // Area
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Area: ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
                     child: Text(
@@ -111,9 +201,9 @@ class _FilterWideCardState extends State<FilterWideCard> {
               // Country
               Row(
                 children: [
-                  Text(
+                  const Text(
                     'Country: ',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
                     child: Text(

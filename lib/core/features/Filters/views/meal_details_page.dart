@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mealdb_application/core/constants/colors.dart';
 import 'package:mealdb_application/core/features/Filters/data/Models/filter_model.dart';
 import 'package:mealdb_application/core/features/Filters/data/Models/meal_model.dart';
@@ -6,6 +7,9 @@ import 'package:mealdb_application/core/features/Filters/data/Repositories/filte
 import 'package:mealdb_application/core/features/Filters/views/filter_by_Ingredient.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_area.dart';
 import 'package:mealdb_application/core/features/Filters/views/filter_by_category.dart';
+import 'package:mealdb_application/core/features/favorites__Local/cubit/favorites_cubit.dart';
+import 'package:mealdb_application/core/features/favorites__Local/cubit/favorites_state.dart';
+import 'package:mealdb_application/core/utils/pref_helper.dart';
 import 'package:mealdb_application/root.dart';
 import 'package:mealdb_application/core/network/dio_error.dart';
 
@@ -26,19 +30,66 @@ class MealDP extends StatefulWidget {
 
 class _MealDPState extends State<MealDP> {
   MealModel? mealModel;
+  String? _userId;
 
   @override
   void initState() {
     super.initState();
     fetchMealDetails();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    final userId = await PrefHelper.getUserId();
+    if (mounted) {
+      setState(() {
+        _userId = userId;
+      });
+      if (userId != null && userId.isNotEmpty) {
+        final cubit = context.read<FavoritesCubit>();
+        if (cubit.state is FavoritesInitial) {
+          cubit.loadFavorites(userId);
+        }
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    final userId = _userId ?? await PrefHelper.getUserId();
+    if (userId == null || userId.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please log in to manage favorites.'),
+            backgroundColor: AppColors.errorColor,
+          ),
+        );
+      }
+      return;
+    }
+
+    final meal = mealModel ??
+        MealModel(
+          id: widget.model.id,
+          name: widget.model.name,
+          imageUrl: widget.model.imageUrl,
+          Area: widget.model.Area,
+          Country: widget.model.Country,
+        );
+
+    if (mounted) {
+      context.read<FavoritesCubit>().toggleFavorite(meal, userId);
+    }
   }
 
   Future<void> fetchMealDetails() async {
     try {
       final response = await FiltersRepo().getMealDetails(widget.model.id);
-      setState(() {
-        mealModel = response;
-      });
+      if (mounted) {
+        setState(() {
+          mealModel = response;
+        });
+      }
     } catch (e) {
       throw ApiError(message: '(MealDP) Failed to load meal details: $e');
     }
@@ -58,6 +109,22 @@ class _MealDPState extends State<MealDP> {
           },
         ),
         title: const Text('Meal Details'),
+        actions: [
+          BlocBuilder<FavoritesCubit, FavoritesState>(
+            builder: (context, state) {
+              final isFavorite = state is FavoritesLoaded &&
+                  state.favorites.any((m) => m.id == widget.model.id);
+
+              return IconButton(
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : AppColors.SelectedColor,
+                ),
+                onPressed: _toggleFavorite,
+              );
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -94,9 +161,9 @@ class _MealDPState extends State<MealDP> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Area: ',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 19,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -114,9 +181,9 @@ class _MealDPState extends State<MealDP> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Country: ',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 19,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -150,13 +217,12 @@ class _MealDPState extends State<MealDP> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   padding: const EdgeInsets.all(8),
-
                   child: Column(
                     children: [
-                      Text(
+                      const Text(
                         textAlign: TextAlign.center,
                         'Youtube',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           color: Color.fromARGB(255, 252, 81, 69),
                         ),
@@ -188,10 +254,10 @@ class _MealDPState extends State<MealDP> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             textAlign: TextAlign.center,
                             'Ingredients',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 19,
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.bold,
@@ -213,10 +279,10 @@ class _MealDPState extends State<MealDP> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             textAlign: TextAlign.center,
                             'Measures',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 19,
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.bold,
@@ -247,7 +313,11 @@ class _MealDPState extends State<MealDP> {
   }
 
   void NavigateBack(BuildContext context) {
-    if (widget.filterType == 'search') {
+    if (widget.filterType == 'favorites') {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => Root(H_index: 0, navIndex: 0)));
+    } else if (widget.filterType == 'search') {
       Navigator.of(
         context,
       ).pushReplacement(MaterialPageRoute(builder: (context) => Root()));
@@ -272,3 +342,4 @@ class _MealDPState extends State<MealDP> {
     }
   }
 }
+

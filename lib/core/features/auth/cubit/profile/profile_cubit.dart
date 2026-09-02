@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mealdb_application/core/features/auth/cubit/profile_states.dart';
+import 'package:mealdb_application/core/features/auth/cubit/profile/profile_states.dart';
 import 'package:mealdb_application/core/features/auth/data/models/user_model.dart';
 import 'package:mealdb_application/core/features/auth/data/repo/user_dao.dart';
 import 'package:mealdb_application/core/features/auth/data/services/image_picker_service.dart';
@@ -17,7 +17,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(const ProfileError('No signed-in user was found.'));
       return;
     }
-
     try {
       final user = await _userDao.getUserById(userId);
       if (user == null) {

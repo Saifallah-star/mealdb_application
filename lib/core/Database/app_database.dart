@@ -25,18 +25,50 @@ class AppDatabase {
       version: DBConstants.databaseVersion,
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 3) {
-          await db.execute(
-            'ALTER TABLE ${DBConstants.usersTable} '
-            'ADD COLUMN ${DBConstants.columnProfileImage} TEXT',
-          );
+          await db.execute('''
+             CREATE TABLE ${DBConstants.mealsTable}(
+            ${DBConstants.mealIdColumn} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            ${DBConstants.mealNameColumn} TEXT NOT NULL,
+            ${DBConstants.mealImageColumn} TEXT NOT NULL,
+             ${DBConstants.mealAreaColumn} TEXT NOT NULL,
+              ${DBConstants.mealCountryColumn} TEXT NOT NULL,
+            ${DBConstants.userIdColumn} INTEGER NOT NULL,
+            FOREIGN KEY (${DBConstants.userIdColumn}) REFERENCES ${DBConstants.usersTable}(${DBConstants.idColumn}) ON DELETE CASCADE
+          )
+          ''');
+        }
+        if (oldVersion < 4) {
+          var res = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='${DBConstants.mealsTable}'");
+          if (res.isNotEmpty) {
+            await db.execute('ALTER TABLE ${DBConstants.mealsTable} RENAME TO ${DBConstants.mealsTable}_old');
+          }
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS ${DBConstants.mealsTable}(
+              ${DBConstants.mealIdColumn} INTEGER PRIMARY KEY NOT NULL,
+              ${DBConstants.mealNameColumn} TEXT NOT NULL,
+              ${DBConstants.mealImageColumn} TEXT NOT NULL,
+              ${DBConstants.mealAreaColumn} TEXT NOT NULL,
+              ${DBConstants.mealCountryColumn} TEXT NOT NULL,
+              ${DBConstants.userIdColumn} TEXT NOT NULL,
+              FOREIGN KEY (${DBConstants.userIdColumn})
+                REFERENCES ${DBConstants.usersTable}(${DBConstants.idColumn})
+                ON DELETE CASCADE
+            )
+          ''');
+          if (res.isNotEmpty) {
+            await db.execute('''
+              INSERT INTO ${DBConstants.mealsTable} (${DBConstants.mealIdColumn}, ${DBConstants.mealNameColumn}, ${DBConstants.mealImageColumn}, ${DBConstants.mealAreaColumn}, ${DBConstants.mealCountryColumn}, ${DBConstants.userIdColumn})
+              SELECT ${DBConstants.mealIdColumn}, ${DBConstants.mealNameColumn}, ${DBConstants.mealImageColumn}, ${DBConstants.mealAreaColumn}, ${DBConstants.mealCountryColumn}, CAST(${DBConstants.userIdColumn} AS TEXT)
+              FROM ${DBConstants.mealsTable}_old
+            ''');
+            await db.execute('DROP TABLE ${DBConstants.mealsTable}_old');
+          }
         }
       },
-
       onConfigure: (db) async {
         // Enable foreign key constraints
         await db.execute('PRAGMA foreign_keys = ON');
       },
-
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE ${DBConstants.usersTable}(
@@ -48,21 +80,17 @@ class AppDatabase {
           )
         ''');
 
-        // await db.execute('''
-        //   CREATE TABLE ${DBConstants.mealsTable}(
-        //     ${DBConstants.mealIdColumn} INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        //     ${DBConstants.mealNameColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealCategoryColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealAreaColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealInstructionsColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealImageColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealYoutubeColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealIngredientColumn} TEXT NOT NULL,
-        //     ${DBConstants.mealMeasureColumn} TEXT NOT NULL,
-        //     ${DBConstants.userIdColumn} INTEGER NOT NULL,
-        //     FOREIGN KEY (${DBConstants.userIdColumn}) REFERENCES ${DBConstants.usersTable}(${DBConstants.idColumn}) ON DELETE CASCADE
-        //   )
-        // ''');
+        await db.execute('''
+          CREATE TABLE ${DBConstants.mealsTable}(
+            ${DBConstants.mealIdColumn} INTEGER PRIMARY KEY NOT NULL,
+            ${DBConstants.mealNameColumn} TEXT NOT NULL,
+            ${DBConstants.mealImageColumn} TEXT NOT NULL,
+            ${DBConstants.mealAreaColumn} TEXT NOT NULL,
+            ${DBConstants.mealCountryColumn} TEXT NOT NULL,
+            ${DBConstants.userIdColumn} TEXT NOT NULL,
+            FOREIGN KEY (${DBConstants.userIdColumn}) REFERENCES ${DBConstants.usersTable}(${DBConstants.idColumn}) ON DELETE CASCADE
+          )
+        ''');
       },
     );
   }
