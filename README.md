@@ -1,17 +1,104 @@
-# mealdb_application
+# MealDB Application
 
-A new Flutter project.
+MealDB Application is a Flutter mobile app that helps users explore meals from TheMealDB API. It provides a clean recipe-discovery experience with browsing, filtering, search, favorites, and user account features.
 
-## Getting Started
+## Project overview
 
-This project is a starting point for a Flutter application.
+This project is designed as a complete food/recipe app where users can:
 
-A few resources to get you started if this is your first Flutter project:
+- Browse meals by category, area, and ingredient
+- Search for meals by name
+- Open detailed meal pages with instructions, ingredients, and images
+- Save favorite meals locally for quick access
+- Create or log in to a user account and manage a profile
+- Adjust app settings in a simple mobile-friendly interface
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+The app combines a remote API with local persistence, making it a good example of a Flutter app that uses both online data and offline data storage.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Main features
+
+- Food discovery from TheMealDB API
+- Category-based browsing
+- Area-based filtering
+- Ingredient-based filtering
+- Meal search and detail view
+- Local favorites using SQLite
+- Authentication flow with local user storage
+- User profile management
+- Responsive Material Design UI
+- State management with Flutter BLoC
+
+## Tech stack
+
+- Flutter / Dart
+- BLoC for state management
+- Dio for API requests
+- SQLite for local database storage
+- SharedPreferences for lightweight app preferences
+- Image picker support for profile images
+- Material Design components
+
+## Project structure
+
+```text
+lib/
+├── main.dart
+├── root.dart
+├── splash.dart
+├── core/
+│   ├── Database/
+│   ├── constants/
+│   ├── features/
+│   │   ├── auth/
+│   │   ├── favorites__Local/
+│   │   ├── Filters/
+│   │   ├── home/
+│   │   └── settings/
+│   ├── network/
+│   ├── shared/
+│   └── utils/
+``` 
+
+## App workflow
+
+1. The app launches with a splash screen.
+2. Users log in or sign up through the authentication flow.
+3. The home screen displays meal categories, areas, and ingredients.
+4. Users can search for meals or filter by selected categories/areas/ingredients.
+5. Meal details show instructions and ingredients.
+6. Favorite meals are saved locally so users can revisit them anytime.
+7. The profile and settings screens allow personalization and account management.
+
+## Getting started
+
+### Prerequisites
+
+- Flutter SDK installed
+- Android Studio or VS Code with Flutter support
+- A device or emulator
+
+### Install dependencies
+
+```bash
+flutter pub get
+```
+
+### Run the app
+
+```bash
+flutter run
+```
+
+### Build for release
+
+```bash
+flutter build apk
+```
+
+## Notes
+
+This project uses the TheMealDB public API and a local SQLite database (`mealdb.db`) for app-specific data such as favorites and user information.
+
+## License
+
+This project is for educational/demo use unless otherwise stated by the project owner.

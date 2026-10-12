@@ -4,7 +4,8 @@ import 'package:mealdb_application/core/features/favorites__Local/data/repo/favo
 class FavoritesLocalRepo {
   final FavoritesLocalDAO _dao;
 
-  FavoritesLocalRepo({FavoritesLocalDAO? dao}) : _dao = dao ?? FavoritesLocalDAO();
+  FavoritesLocalRepo({FavoritesLocalDAO? dao})
+    : _dao = dao ?? FavoritesLocalDAO();
 
   Future<void> addFavorite(MealModel meal, String userId) async {
     await _dao.addFavorite(meal, userId);

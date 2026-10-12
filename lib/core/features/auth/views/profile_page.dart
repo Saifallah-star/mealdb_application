@@ -415,6 +415,9 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //This checks two things:
+    // A path exists in the user model.
+    // A file actually exists at that path.
     final hasImage = path != null && File(path!).existsSync();
     return CircleAvatar(
       radius: 58,

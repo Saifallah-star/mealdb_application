@@ -38,9 +38,13 @@ class AppDatabase {
           ''');
         }
         if (oldVersion < 4) {
-          var res = await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='${DBConstants.mealsTable}'");
+          var res = await db.rawQuery(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='${DBConstants.mealsTable}'",
+          );
           if (res.isNotEmpty) {
-            await db.execute('ALTER TABLE ${DBConstants.mealsTable} RENAME TO ${DBConstants.mealsTable}_old');
+            await db.execute(
+              'ALTER TABLE ${DBConstants.mealsTable} RENAME TO ${DBConstants.mealsTable}_old',
+            );
           }
           await db.execute('''
             CREATE TABLE IF NOT EXISTS ${DBConstants.mealsTable}(
@@ -70,6 +74,7 @@ class AppDatabase {
         await db.execute('PRAGMA foreign_keys = ON');
       },
       onCreate: (db, version) async {
+        // users table
         await db.execute('''
           CREATE TABLE ${DBConstants.usersTable}(
             ${DBConstants.idColumn} TEXT PRIMARY KEY NOT NULL,
@@ -79,7 +84,7 @@ class AppDatabase {
             ${DBConstants.columnProfileImage} TEXT
           )
         ''');
-
+        // favorite meals table
         await db.execute('''
           CREATE TABLE ${DBConstants.mealsTable}(
             ${DBConstants.mealIdColumn} INTEGER PRIMARY KEY NOT NULL,
